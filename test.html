@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>Messenger-style Chat</title>
+   <style>
+      body {
+         font-family: Arial, sans-serif;
+      }
+
+      .chat-container {
+         width: 300px;
+         margin: 0 auto;
+         border: 1px solid #ccc;
+         border-radius: 5px;
+         overflow: hidden;
+      }
+
+      .chat-header {
+         background-color: #007bff;
+         color: #fff;
+         padding: 10px;
+         text-align: center;
+      }
+
+      .chat-messages {
+         padding: 10px;
+         max-height: 300px;
+         overflow-y: scroll;
+      }
+
+      .message {
+         background-color: #f1f0f0;
+         padding: 10px;
+         margin: 5px;
+         border-radius: 5px;
+      }
+
+      .user-message {
+         background-color: #007bff;
+         color: #fff;
+         text-align: right;
+      }
+
+      .input-container {
+         padding: 10px;
+         border-top: 1px solid #ccc;
+      }
+
+      input[type="text"] {
+         width: 100%;
+         padding: 5px;
+         border: 1px solid #ccc;
+         border-radius: 3px;
+      }
+
+      .send-button {
+         background-color: #007bff;
+         color: #fff;
+         border: none;
+         padding: 5px 10px;
+         border-radius: 3px;
+         cursor: pointer;
+      }
+   </style>
+</head>
+
+<body>
+   <div class="chat-container">
+      <div class="chat-header">Messenger Chat</div>
+      <div class="chat-messages">
+          <div class="message user-message">Hello, how can I help you?</div>
+          <div class="message">Hi! I have a question about your products.</div>
+      </div>
+      <div class="input-container">
+          <input type="text" id="message-input" placeholder="Type your message...">
+          <button class="send-button" onclick="sendMessage()">Send</button>
+      </div>
+  </div>
+
+   <script>
+      function sendMessage() {
+         var messageInput = document.getElementById("message-input");
+         var messageText = messageInput.value;
+         var chatMessages = document.querySelector(".chat-messages");
+
+         if (messageText.trim() !== "") {
+            var messageDiv = document.createElement("div");
+            messageDiv.className = "message user-message";
+            messageDiv.textContent = messageText;
+            chatMessages.appendChild(messageDiv);
+
+            // 서버로 메시지 전송 (서버 측 코드에서 처리)
+            sendMessageToServer(messageText);
+
+            messageInput.value = "";
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+         }
+      }
+
+      // 서버로 메시지 전송 함수 (실제로는 서버와의 통신 로직이 필요합니다)
+      function sendMessageToServer(messageText) {
+         // 여기서 서버로 메시지를 전송하는 코드를 작성해야 합니다.
+      }
+   </script>
+</body>
+
+</html>
