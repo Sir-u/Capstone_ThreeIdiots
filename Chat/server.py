@@ -22,6 +22,9 @@ client_count = 0  # 연결된 클라이언트 수를 저장할 변수
 def handle_client(client_socket, addr, client_number):
     print(f'클라이언트 {client_number}로부터의 연결: {addr}')
 
+    # 클라이언트에게 클라이언트 번호 전송
+    client_socket.send(f'당신은 클라이언트 {client_number}입니다.'.encode('utf-8'))
+
     # 클라이언트가 연결을 끊을 때까지 메시지 수신 및 전송
     while True:
         message = client_socket.recv(1024).decode('utf-8')
@@ -30,12 +33,12 @@ def handle_client(client_socket, addr, client_number):
             clients.remove(client_socket)
             client_socket.close()
             break
-        print(f'클라이언트 {client_number}로부터 받은 메시지: {message}')
+        print(f'클라이언트 {client_number} >> {message}')
 
         # 연결된 모든 클라이언트에게 메시지 전송
         for client in clients:
             if client != client_socket:
-                client.send(f'클라이언트 {client_number}: {message}'.encode('utf-8'))
+                client.send(f'클라이언트 {client_number} >> {message}'.encode('utf-8'))
 
 # 클라이언트 연결을 수락하고 핸들링하는 함수
 def accept_clients():
