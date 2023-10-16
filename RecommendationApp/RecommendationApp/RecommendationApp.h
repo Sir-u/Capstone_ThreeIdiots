@@ -49,7 +49,7 @@ private:
         // 옵션 선택 페이지
         optionPage = new QWidget();
         optionLabel = new QLabel("텍스트를 선택하세요:", this);
-        QHBoxLayout* optionButtonLayout = new QHBoxLayout();
+        QVBoxLayout* optionButtonLayout = new QVBoxLayout(); // 변경: QBoxLayout을 QVBoxLayout로 변경
         for (auto button : optionButtons)
         {
             button->setStyleSheet(
@@ -69,9 +69,9 @@ private:
             "border: none;"
             "border-radius: 5px;");
         connect(recommendAgainButton, &QPushButton::clicked, this, &RecommendationApp::recommendAgain);
-        QVBoxLayout* optionLayout = new QVBoxLayout(optionPage);
+        QVBoxLayout* optionLayout = new QVBoxLayout(optionPage); // 변경: QBoxLayout을 QVBoxLayout로 변경
         optionLayout->addWidget(optionLabel, 0, Qt::AlignCenter); // 중앙 정렬
-        optionLayout->addLayout(optionButtonLayout);
+        optionLayout->addLayout(optionButtonLayout); // 변경: 수직 레이아웃으로 버튼 추가
         optionLayout->addWidget(recommendAgainButton, 0, Qt::AlignCenter); // 중앙 정렬
 
         // 결과 페이지
