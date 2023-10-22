@@ -1,21 +1,30 @@
 import pymysql
 
-db = pymysql.connect(host='localhost',
-                user='root', password='0000'
-                , charset='utf8')
+db = None
+try:
+   db = pymysql.connect(
+      host='127.0.0.1',
+      user='root',
+      password='',
+      db='homestead',
+      charset='utf8'
+   )
+   print('DB 연결 성공')
 
-print(db)
+   sql = '''
+   CREATE TABLE userinfo (
+      uid VARCHAR(25) NOT NULL PRIMARY KEY,
+      gender INT,
+      age INT
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8 
+   '''
 
-cursor = db.cursor()
+   with db.cursor() as cursor:
+      cursor.execute(sql)
 
-cursor.execute('USE mydatabase')
-# cursor.execute('insert into user_info(id, pwd, gender, age) values ("turtle648", 1, 25)')
+except Exception as e:
+   print(e)
 
-cursor.execute("SELECT * FROM userinfo;")
-value = cursor.fetchall()
-
-print(value)
-
-
-db.commit()
-db.close()
+finally:
+   if db is not None:
+      db.close()
