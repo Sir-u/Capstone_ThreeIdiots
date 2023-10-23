@@ -49,7 +49,7 @@ private:
         // 옵션 선택 페이지
         optionPage = new QWidget();
         optionLabel = new QLabel("텍스트를 선택하세요:", this);
-        QHBoxLayout* optionButtonLayout = new QHBoxLayout();
+        QVBoxLayout* optionButtonLayout = new QVBoxLayout(); // 변경: QBoxLayout을 QVBoxLayout로 변경
         for (auto button : optionButtons)
         {
             button->setStyleSheet(
@@ -69,9 +69,9 @@ private:
             "border: none;"
             "border-radius: 5px;");
         connect(recommendAgainButton, &QPushButton::clicked, this, &RecommendationApp::recommendAgain);
-        QVBoxLayout* optionLayout = new QVBoxLayout(optionPage);
+        QVBoxLayout* optionLayout = new QVBoxLayout(optionPage); // 변경: QBoxLayout을 QVBoxLayout로 변경
         optionLayout->addWidget(optionLabel, 0, Qt::AlignCenter); // 중앙 정렬
-        optionLayout->addLayout(optionButtonLayout);
+        optionLayout->addLayout(optionButtonLayout); // 변경: 수직 레이아웃으로 버튼 추가
         optionLayout->addWidget(recommendAgainButton, 0, Qt::AlignCenter); // 중앙 정렬
 
         // 결과 페이지
@@ -106,6 +106,7 @@ private slots:
     {
         // 옵션 선택 페이지로 전환
         stackedWidget->setCurrentIndex(1);
+        recommendAgain();
         prevPageIndex = 0; // 현재 페이지가 옵션 선택 페이지이므로 이전 페이지는 추천 페이지(인덱스 0)
     }
 
@@ -134,13 +135,20 @@ private slots:
     void recommendAgain()
     {
         // 재추천을 위한 기능
-        QStringList options = { "옵션 1", "옵션 2", "옵션 3" };
+        QStringList options = { "안녕하세요, 저는 OO입니다. 만나서 반갑습니다.",
+            "요즘 날씨가 정말 덥네요.",
+            "여가 시간에 뭐 하시나요? 취미가 뭐에요?",
+            "오늘 하루 어떻게 보내셨어요?",
+            "여행 좋아하시나요? 다음 휴가 때 어디로 가려고 생각 중이에요.",
+            "주말에 무엇을 하실 계획이에요?",
+            "오늘은 어떤 계획이 있나요?", 
+            "점심은 뭐 먹을거에요? 어떤 음식을 좋아하세요?"};
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
         std::default_random_engine rng(seed);
 
         // options 벡터를 무작위로 섞음
         std::shuffle(options.begin(), options.end(), rng);
-        for (int i = 0; i < options.size(); ++i)
+        for (int i = 0; i < 3; ++i)
         {
             optionButtons[i]->setText(options[i]);
         }
