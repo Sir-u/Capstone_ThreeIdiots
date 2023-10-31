@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/Users/siru/GitHub/Capstone_ThreeIdiots/DeepLearning/utils/')
+sys.path.append('./DeepLearning/utils/')
 from Preprocess import Preprocess
 
 # from utils.Preprocess import Preprocess
