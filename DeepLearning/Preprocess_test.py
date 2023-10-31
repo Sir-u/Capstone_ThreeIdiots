@@ -1,4 +1,4 @@
-from utils.Preprocess import Preprocess
+From utils.Preprocess import Preprocess
 
 sent = "내일 오전 10시에 탕수육 주무하고 싶어"
 
