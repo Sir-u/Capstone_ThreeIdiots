@@ -1,1 +1,2 @@
-om utils.Preprocess import Preproce
+
+# 단어 시퀀스 생성

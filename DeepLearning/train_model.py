@@ -12,9 +12,11 @@ data = pd.read_csv(train_file, delimiter=',')
 queries = data['query'].tolist()
 intents = data['intent'].tolist()
 
-from utils.Preprocess import Preprocess
-p = Preprocess(word2index_dic='../../train_tools/dict/chatbot_dict.bin',
-               userdic='../../utils/user_dic.tsv')
+import sys
+sys.path.append('../DeepLearning/utils/')
+from Preprocess import Preprocess
+p = Preprocess(word2index_dic='./train_tools/dict/chatbot_dict.bin',
+               userdic='./utils/user_dic.tsv')
 
 # 단어 시퀀스 생성
 sequences = []
@@ -27,7 +29,10 @@ for sentence in queries:
 
 # 단어 인덱스 시퀀스 벡터
 # 단어 시퀀스 벡터 크기
-from config.GlobalParams import MAX_SEQ_LEN
+# FIXME:
+# from config.GlobalParams import MAX_SEQ_LEN
+
+MAX_SEQ_LEN = 15
 padded_seqs = preprocessing.sequence.pad_sequences(sequences, maxlen=MAX_SEQ_LEN, padding='post')
 
 # (105658, 15)
