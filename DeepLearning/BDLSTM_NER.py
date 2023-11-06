@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from tensorflow.keras import preprocessing
+from keras import preprocessing
 from sklearn.model_selection import train_test_split
 import numpy as np
 
@@ -23,7 +23,7 @@ def read_file(file_name):
 
 
 # 학습용 말뭉치 데이터를 불러옴
-corpus = read_file('train.txt')
+corpus = read_file('C:/Users/dowon/Desktop/Workplace/Capstone_ThreeIdiots/DeepLearning/train.txt')
 
 # 말뭉치 데이터에서 단어와 BIO 태그만 불러와 학습용 데이터셋 생성
 sentences, tags = [], []
@@ -86,9 +86,9 @@ print("테스트 샘플 시퀀스 형상 : ", x_test.shape)
 print("테스트 샘플 레이블 형상 : ", y_test.shape)
 
 # 모델 정의(Bi-LSTM)
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional
-from tensorflow.keras.optimizers import Adam
+from keras.models import Sequential
+from keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional
+from keras.optimizers import Adam
 model = Sequential()
 model.add(Embedding(input_dim=vocab_size, output_dim=30, input_length=max_len, mask_zero=True))
 model.add(Bidirectional(LSTM(200, return_sequences=True, dropout=0.50, recurrent_dropout=0.25)))
@@ -96,7 +96,7 @@ model.add(TimeDistributed(Dense(tag_size, activation='softmax')))
 model.compile(loss='categorical_crossentropy', optimizer=Adam(0.01), metrics=['accuracy'])
 model.fit(x_train, y_train, batch_size=128, epochs=10)
 print("평가 결과 : ", model.evaluate(x_test, y_test)[1])
-
+model.save('ner_model.h5')
 
 # 시퀀스를 NER 태그로 변환
 def sequences_to_tag(sequences):

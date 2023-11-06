@@ -1,10 +1,10 @@
 import tensorflow as tf
 import pandas as pd
-from tensorflow.keras.models import Model, load_model
-from tensorflow.keras import preprocessing
+from keras.models import Model, load_model
+from keras import preprocessing
 
 # 데이터 읽기
-train_file = "./chatbotdata.csv"
+train_file = 'C:/Users/dowon/Desktop/Workplace/Capstone_ThreeIdiots/DeepLearning/chatbotdata.csv'
 data = pd.read_csv(train_file, delimiter=',')
 features = data['Q'].tolist()
 labels = data['label'].tolist()
@@ -23,7 +23,8 @@ ds = tf.data.Dataset.from_tensor_slices((padded_seqs, labels))
 ds = ds.shuffle(len(features))
 test_ds = ds.take(2000).batch(20)
 
-model = load_model('cnn_model.h5')
+model = load_model('C:/Users/dowon/Desktop/Workplace/Capstone_ThreeIdiots/DeepLearning/cnn_model.h5')
+####경로수정
 model.summary()
 model.evaluate(test_ds, verbose=2)
 

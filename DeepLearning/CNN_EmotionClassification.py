@@ -1,10 +1,11 @@
 import pandas as pd
 import tensorflow as tf
-from tensorflow.keras import preprocessing
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Input, Embedding, Dense, Dropout, Conv1D, GlobalMaxPooling1D, concatenate
+from keras import preprocessing
+from keras.models import Model
+from keras.layers import Input, Embedding, Dense, Dropout, Conv1D, GlobalMaxPooling1D, concatenate
 
-train_file = './DeepLearning/chatbotdata.csv'
+train_file = 'C:/Users/dowon/Desktop/Workplace/Capstone_ThreeIdiots/DeepLearning/chatbotdata.csv'
+####경로수정
 data = pd.read_csv(train_file, delimiter=',')
 features = data['Q'].tolist()
 labels = data['label'].tolist()
@@ -75,4 +76,4 @@ loss, accuracy = model.evaluate(test_ds, verbose=1)
 print('Accuracy: %f' % (accuracy*100))
 print('loss: %f' % (loss))
 
-model.save('./DeepLearning/cnn_model.h5')
+model.save('../DeepLearning/cnn_model.h5')
