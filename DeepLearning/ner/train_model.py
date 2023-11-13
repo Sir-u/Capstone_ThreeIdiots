@@ -2,7 +2,7 @@ import sys
 sys.path.append('../DeepLearning/utils/')
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from tensorflow.keras import preprocessing
+from keras import preprocessing
 from sklearn.model_selection import train_test_split
 import numpy as np
 from Preprocess import Preprocess
@@ -87,9 +87,9 @@ print("테스트 샘플 레이블 형상 : ", y_test.shape)
 
 
 # 모델 정의 (Bi-LSTM)
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional
-from tensorflow.keras.optimizers import Adam
+from keras.models import Sequential
+from keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional
+from keras.optimizers import Adam
 
 model = Sequential()
 model.add(Embedding(input_dim=vocab_size, output_dim=30, input_length=max_len, mask_zero=True))
