@@ -1,8 +1,8 @@
 import sys
-sys.path.append('../DeepLearning/utils/')
+sys.path.append('../Capstone_ThreeIdiots/DeepLearning/utils/')
 from Preprocess import Preprocess
 import sys
-sys.path.append('../DeepLearning/ner/')
+sys.path.append('../Capstone_ThreeIdiots/DeepLearning/ner/')
 from NerModel import NerModel
 
 
