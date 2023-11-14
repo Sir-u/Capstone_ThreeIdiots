@@ -5,8 +5,7 @@ sys.path.append('../Capstone_ThreeIdiots/DeepLearning/utils/')
 from Preprocess import Preprocess
 
 # 전처리 객체 생성
-p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/dict/chatbot_dict.bin',
-               userdic='../Capstone_ThreeIdiots/DeepLearning/utils/user_dic.tsv')
+p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/dict/chatbot_dict.bin', userdic='../Capstone_ThreeIdiots/DeepLearning/utils/user_dic.tsv')
 
 # 질문/답변 학습 디비 연결 객체 생성
 # db = Database(
@@ -22,19 +21,19 @@ query = "자장면 주문할게요"
 
 # 의도 파악
 import sys
-sys.path.append('../Capstone_ThreeIdiots/DeepLearning/intent/')
-from IntentModel import IntentModel
+sys.path.append('../Capstone_ThreeIdiots/DeepLearning/')
+from intent.IntentModel import IntentModel
 
-intent = IntentModel(model_name='./DeepLearning/intent/intent_model.h5', proprocess=p)
+intent = IntentModel(model_name='../Capstone_ThreeIdiots/DeepLearning/intent/intent_model.h5', proprocess=p)
 predict = intent.predict_class(query)
 intent_name = intent.labels[predict]
 
 # 개체명 인식
 import sys
-sys.path.append('../DeepLearning/ner/')
+sys.path.append('../Capstone_ThreeIdiots/DeepLearning/ner/')
 from NerModel import NerModel
 
-ner = NerModel(model_name='./DeepLearning/ner/ner_model.h5', proprocess=p)
+ner = NerModel(model_name='../Capstone_ThreeIdiots/DeepLearning/ner/ner_model.h5', proprocess=p)
 predicts = ner.predict(query)
 ner_tags = ner.predict_tags(query)
 

@@ -4,8 +4,8 @@ from Preprocess import Preprocess
 from keras import preprocessing
 
 sent = "내일 오전 10시에 짬뽕 주문하고 싶어ㅋㅋ"
-p = Preprocess(word2index_dic='../train_tools/dict/chatbot_dict.bin',
-               userdic = '../utils/user_dic.tsv')
+p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/dict/chatbot_dict.bin',
+               userdic = '../Capstone_ThreeIdiots/DeepLearning/utils/user_dic.tsv')
 
 pos = p.pos(sent)
 keywords = p.get_keywords(pos, without_tag=False)

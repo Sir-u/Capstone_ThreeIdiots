@@ -7,7 +7,7 @@ from keras.layers import Input, Embedding, Dense, Dropout, Conv1D, GlobalMaxPool
 
 
 # 데이터 읽어오기
-train_file = "total_train_data.csv"
+train_file = "../Capstone_ThreeIdiots/DeepLearning/intent/total_train_data.csv"
 data = pd.read_csv(train_file, delimiter=',')
 queries = data['query'].tolist()
 intents = data['intent'].tolist()
@@ -15,8 +15,8 @@ intents = data['intent'].tolist()
 import sys
 sys.path.append('../DeepLearning/utils/')
 from Preprocess import Preprocess
-p = Preprocess(word2index_dic='./train_tools/dict/chatbot_dict.bin',
-               userdic='./utils/user_dic.tsv')
+p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/dict/chatbot_dict.bin',
+               userdic='../Capstone_ThreeIdiots/DeepLearning/utils/user_dic.tsv')
 
 # 단어 시퀀스 생성
 sequences = []
@@ -56,8 +56,7 @@ test_ds = ds.skip(train_size + val_size).take(test_size).batch(20)
 dropout_prob = 0.5
 EMB_SIZE = 128
 EPOCH = 5
-VOCAB_SIZE = len(p.word_index) + 1 #전체 단어 개수
-
+VOCAB_SIZE = len(p.word_index) + 1 #전체 단어 개수+
 
 # CNN 모델
 input_layer = Input(shape=(MAX_SEQ_LEN,))

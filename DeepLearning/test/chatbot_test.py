@@ -49,4 +49,4 @@ except:
 
 print("답변 : ", answer)
 
-db.close() # 디비 연결 끊음s
+db.close() # 디비 연결 끊음
