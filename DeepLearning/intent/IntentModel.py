@@ -26,7 +26,7 @@ class IntentModel:
         
         # #단어 시퀀스 벡터 크기
         import sys
-        sys.path.append('../Capstone_ThreeIdiots/DeepLearning/config/')
+        sys.path.append('../Capstone_ThreeIdiots/DeepLearning/')
         from config.GlobalParams import MAX_SEQ_LEN
         
         #패딩처리
