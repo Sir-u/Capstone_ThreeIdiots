@@ -17,7 +17,7 @@ p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/
 # query = "오전에 탕수육 10개 주문합니다"
 # query = "화자의 질문 의도를 파악합니다."
 # query = "안녕하세요"
-query = "자장면 주문할게요"
+query = "자장면 3개 주문 가능할까요?"
 
 # 의도 파악
 import sys
@@ -30,8 +30,8 @@ intent_name = intent.labels[predict]
 
 # 개체명 인식
 import sys
-sys.path.append('../Capstone_ThreeIdiots/DeepLearning/ner/')
-from NerModel import NerModel
+sys.path.append('../Capstone_ThreeIdiots/DeepLearning/')
+from ner.NerModel import NerModel
 
 ner = NerModel(model_name='../Capstone_ThreeIdiots/DeepLearning/ner/ner_model.h5', proprocess=p)
 predicts = ner.predict(query)

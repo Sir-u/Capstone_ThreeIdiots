@@ -3,7 +3,7 @@ sys.path.append('../Capstone_ThreeIdiots/DeepLearning/utils/')
 from Preprocess import Preprocess
 
 import sys
-sys.path.append('../Capstone_ThreeIdiots/DeepLearning')
+sys.path.append('../Capstone_ThreeIdiots/DeepLearning/')
 from intent.IntentModel import IntentModel
 
 p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/dict/chatbot_dict.bin',
