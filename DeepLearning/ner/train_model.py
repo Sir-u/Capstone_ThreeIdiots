@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../DeepLearning/utils/')
+sys.path.append('../Capstone_ThreeIdiots/DeepLearning/utils/')
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from keras import preprocessing
@@ -23,11 +23,11 @@ def read_file(file_name):
                 this_sent.append(tuple(l.split()))
     return sents
 
-p = Preprocess(word2index_dic='./train_tools/dict/chatbot_dict.bin',
-               userdic='./uils/user_dic.tsv')
+p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/dict/chatbot_dict.bin',
+               userdic='../Capstone_ThreeIdiots/DeepLearning/utils/user_dic.tsv')
 
 # 학습용 말뭉치 데이터를 불러옴
-corpus = read_file('./ner/ner_train.txt')
+corpus = read_file('../Capstone_ThreeIdiots/DeepLearning/ner/ner_train.txt')
 
 # 말뭉치 데이터에서 단어와 BIO 태그만 불러와 학습용 데이터셋 생성
 sentences, tags = [], []
