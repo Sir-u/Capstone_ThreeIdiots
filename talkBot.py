@@ -1,5 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QMessageBox
+from PyQt5.QtWidgets import *
+import random
 
 class RecommendationApp(QWidget):
     def __init__(self):
@@ -7,34 +8,127 @@ class RecommendationApp(QWidget):
         self.initUI()
 
     def initUI(self):
-        # 모던한 디자인을 위해 스타일 시트를 사용
-        self.setStyleSheet("font-size: 18px; background-color: #f0f0f0;")
+        # 전체 앱 스타일 설정
+        self.setStyleSheet(
+            """
+            font-size: 18px;
+            color: black;
+            background-color: #f0f0f0;
+            """
+        )
 
-        # 추천 버튼 생성
+        self.stacked_widget = QStackedWidget()
+
+        # 추천 페이지
+        self.recommend_page = QWidget()
         self.recommend_button = QPushButton("추천해줘")
-        self.recommend_button.setStyleSheet("background-color: #3498db; color: white; padding: 10px; border: none;")
-        self.recommend_button.clicked.connect(self.showRecommendations)
+        self.recommend_button.setStyleSheet(
+            """
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            """
+        )
+        self.recommend_button.clicked.connect(self.showOptionPage)  # 버튼 클릭 시 옵션 선택 페이지로 이동
+        recommend_layout = QVBoxLayout()
+        recommend_layout.addWidget(self.recommend_button)
+        self.recommend_page.setLayout(recommend_layout)
 
-        # 텍스트 표시 레이블
+        # 옵션 선택 페이지
+        self.option_page = QWidget()
+        self.option_label = QLabel("텍스트를 선택하세요:")
+        self.option_buttons = [QPushButton("옵션 1"), QPushButton("옵션 2"), QPushButton("옵션 3")]
+        for button in self.option_buttons:
+            button.setStyleSheet(
+                """
+                background-color: #3498db;
+                color: white;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                """
+            )
+            button.clicked.connect(self.showResultPage)  # 옵션 버튼 클릭 시 결과 페이지로 이동
+        self.recommend_again_button = QPushButton("재추천")
+        self.recommend_again_button.setStyleSheet(
+            """
+            background-color: #2ecc71;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            """
+        )
+        self.recommend_again_button.clicked.connect(self.recommendAgain)  # 재추천 버튼 클릭 시 재추천 기능 실행
+        option_layout = QVBoxLayout()
+        option_layout.addWidget(self.option_label)
+        for button in self.option_buttons:
+            option_layout.addWidget(button)
+        option_layout.addWidget(self.recommend_again_button)
+        self.option_page.setLayout(option_layout)
+
+        # 결과 페이지
+        self.result_page = QWidget()
         self.text_label = QLabel("")
+        self.back_button = QPushButton("돌아가기")
+        self.back_button.setStyleSheet(
+            """
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            """
+        )
+        self.back_button.clicked.connect(self.showRecommendations)  # 돌아가기 버튼 클릭 시 추천 페이지로 이동
+        result_layout = QVBoxLayout()
+        result_layout.addWidget(self.text_label)
+        result_layout.addWidget(self.back_button)
+        self.result_page.setLayout(result_layout)
 
-        # 레이아웃 설정
+        # 페이지를 stacked widget에 추가
+        self.stacked_widget.addWidget(self.recommend_page)
+        self.stacked_widget.addWidget(self.option_page)
+        self.stacked_widget.addWidget(self.result_page)
+
         layout = QVBoxLayout()
-        layout.addWidget(self.recommend_button)
-        layout.addWidget(self.text_label)
+        layout.addWidget(self.stacked_widget)
         self.setLayout(layout)
 
-        # 창 설정
         self.setWindowTitle("추천 앱")
         self.setGeometry(100, 100, 400, 200)
 
+        # 이전 페이지 인덱스를 추적하는 변수
+        self.prevPageIndex = 0
+
+    def showOptionPage(self):
+        # 옵션 선택 페이지로 전환
+        self.stacked_widget.setCurrentIndex(1)
+        self.prevPageIndex = 0  # 현재 페이지가 옵션 선택 페이지이므로 이전 페이지는 추천 페이지(인덱스 0)
+
+    def showResultPage(self):
+        # 결과 페이지로 전환 또는 돌아가기 버튼을 누를 때 옵션 선택 페이지로 전환
+        sender = self.sender()
+        if sender == self.back_button:
+            self.stacked_widget.setCurrentIndex(0)  # 돌아가기 버튼 클릭 시 첫 번째 페이지로
+        else:
+            selected_option = sender.text()
+            self.text_label.setText(f"선택한 텍스트: {selected_option}")
+            self.stacked_widget.setCurrentIndex(2)
+
     def showRecommendations(self):
-        # 추천 버튼을 클릭했을 때 텍스트 3가지를 표시하고 선택할 수 있는 대화상자 표시
+        # 추천 페이지로 전환
+        self.stacked_widget.setCurrentIndex(0)
+
+    def recommendAgain(self):
+        # 재추천을 위한 기능
         options = ["옵션 1", "옵션 2", "옵션 3"]
-        choice, _ = QMessageBox.getItemChooice(self, "추천 선택", "텍스트를 선택하세요:", options=options)
-        
-        if choice:
-            self.text_label.setText(f"선택한 텍스트: {choice}")
+        random.shuffle(options)  # 옵션을 무작위로 섞음
+        for i, option in enumerate(options):
+            self.option_buttons[i].setText(option)  # 버튼 텍스트를 업데이트
+        self.stacked_widget.setCurrentIndex(1)  # 옵션 선택 페이지로 이동
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

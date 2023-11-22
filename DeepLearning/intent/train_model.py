@@ -12,7 +12,7 @@ queries = data['query'].tolist()
 intents = data['intent'].tolist()
 
 import sys
-sys.path.append('../DeepLearning/utils/')
+sys.path.append('../Capstone_ThreeIdiots/DeepLearning/utils/')
 from Preprocess import Preprocess
 p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/dict/chatbot_dict.bin',
                userdic='../Capstone_ThreeIdiots/DeepLearning/utils/user_dic.tsv')
