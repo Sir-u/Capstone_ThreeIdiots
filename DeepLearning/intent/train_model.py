@@ -11,7 +11,7 @@ queries = data['query'].tolist()
 intents = data['intent'].tolist()
 
 import sys
-sys.path.append('../DeepLearning/utils/')
+sys.path.append('../Capstone_ThreeIdiots/DeepLearning/utils/')
 from Preprocess import Preprocess
 p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/dict/chatbot_dict.bin',
                userdic='../Capstone_ThreeIdiots/DeepLearning/utils/user_dic.tsv')
@@ -19,10 +19,10 @@ p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/
 # 단어 시퀀스 생성
 sequences = []
 for sentence in queries:
-    pos = p.pos(sentence)
-    keywords = p.get_keywords(pos, without_tag=True)
-    seq = p.get_wordidx_sequence(keywords)
-    sequences.append(seq)
+   pos = p.pos(sentence)
+   keywords = p.get_keywords(pos, without_tag=True)
+   seq = p.get_wordidx_sequence(keywords)
+   sequences.append(seq)
 
 # 단어 인덱스 시퀀스 벡터
 MAX_SEQ_LEN = 15
@@ -43,7 +43,7 @@ test_ds = ds.skip(train_size + val_size).take(test_size).batch(20)
 # 하이퍼 파라미터 설정
 dropout_prob = 0.5
 EMB_SIZE = 128
-EPOCH = 5
+EPOCH = 20
 VOCAB_SIZE = len(p.word_index) + 1
 
 # CNN 모델
