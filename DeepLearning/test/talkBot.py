@@ -1,8 +1,11 @@
 import sys
 from PyQt5.QtWidgets import *
 import random
+import testfile
 
 class RecommendationApp(QWidget):
+    option = ["옵션 1", "옵션 2", "옵션 3"]
+
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -31,7 +34,7 @@ class RecommendationApp(QWidget):
             border-radius: 5px;
             """
         )
-        self.recommend_button.clicked.connect(self.showOptionPage)  # 버튼 클릭 시 옵션 선택 페이지로 이동
+        self.recommend_button.clicked.connect(self.updateOptionPage)  # 버튼 클릭 시 옵션 선택 페이지로 이동
         recommend_layout = QVBoxLayout()
         recommend_layout.addWidget(self.recommend_button)
         self.recommend_page.setLayout(recommend_layout)
@@ -39,7 +42,7 @@ class RecommendationApp(QWidget):
         # 옵션 선택 페이지
         self.option_page = QWidget()
         self.option_label = QLabel("텍스트를 선택하세요:")
-        self.option_buttons = [QPushButton("옵션 1"), QPushButton("옵션 2"), QPushButton("옵션 3")]
+        self.option_buttons = [QPushButton(self.option[0]), QPushButton(self.option[1]), QPushButton(self.option[2])]
         for button in self.option_buttons:
             button.setStyleSheet(
                 """
@@ -61,7 +64,7 @@ class RecommendationApp(QWidget):
             border-radius: 5px;
             """
         )
-        self.recommend_again_button.clicked.connect(self.recommendAgain)  # 재추천 버튼 클릭 시 재추천 기능 실행
+        self.recommend_again_button.clicked.connect(self.updateOptionPage)  # 재추천 버튼 클릭 시 재추천 기능 실행
         option_layout = QVBoxLayout()
         option_layout.addWidget(self.option_label)
         for button in self.option_buttons:
@@ -122,13 +125,15 @@ class RecommendationApp(QWidget):
         # 추천 페이지로 전환
         self.stacked_widget.setCurrentIndex(0)
 
-    def recommendAgain(self):
-        # 재추천을 위한 기능
-        options = ["옵션 1", "옵션 2", "옵션 3"]
-        random.shuffle(options)  # 옵션을 무작위로 섞음
-        for i, option in enumerate(options):
-            self.option_buttons[i].setText(option)  # 버튼 텍스트를 업데이트
-        self.stacked_widget.setCurrentIndex(1)  # 옵션 선택 페이지로 이동
+    #def recommendAgain(self):
+        
+
+    def updateOptionPage(self):
+        testfile.CreateRecommendSentence()
+        for i in range(len(self.option)):
+            self.option[i] = testfile.answer[i]
+            self.option_buttons[i].setText(self.option[i])
+        self.showOptionPage()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
