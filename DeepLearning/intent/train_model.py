@@ -2,7 +2,7 @@ import pandas as pd
 import tensorflow as tf
 from keras import preprocessing
 from keras.models import Model
-from keras.layers import Input, Embedding, Dense, Dropout, Conv1D, GlobalMaxPool1D, concatenate, BatchNormalization
+from keras.layers import Input, Embedding, Dense, Dropout, Conv1D, GlobalMaxPool1D, Reshape, concatenate, BatchNormalization, LSTM
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 
 # 데이터 읽어오기
@@ -57,11 +57,11 @@ embedding_layer = Embedding(VOCAB_SIZE, EMB_SIZE, input_length=MAX_SEQ_LEN)(inpu
 dropout_emb = Dropout(rate=dropout_prob)(embedding_layer)
 
 # 여러 컨볼루션 레이어와 필터 크기 사용
-conv1 = Conv1D(filters=128, kernel_size=3, padding='valid', activation=tf.nn.relu)(dropout_emb)
-conv2 = Conv1D(filters=128, kernel_size=4, padding='valid', activation=tf.nn.relu)(dropout_emb)
+conv1 = Conv1D(filters=32, kernel_size=3, padding='valid', activation=tf.nn.relu)(dropout_emb)
+conv2 = Conv1D(filters=64, kernel_size=4, padding='valid', activation=tf.nn.relu)(dropout_emb)
 conv3 = Conv1D(filters=128, kernel_size=5, padding='valid', activation=tf.nn.relu)(dropout_emb)
-conv4 = Conv1D(filters=128, kernel_size=6, padding='valid', activation=tf.nn.relu)(dropout_emb)
-conv5 = Conv1D(filters=128, kernel_size=7, padding='valid', activation=tf.nn.relu)(dropout_emb)
+conv4 = Conv1D(filters=256, kernel_size=6, padding='valid', activation=tf.nn.relu)(dropout_emb)
+conv5 = Conv1D(filters=512, kernel_size=7, padding='valid', activation=tf.nn.relu)(dropout_emb)
 
 # 각 컨볼루션 레이어 뒤에 배치 정규화 레이어 추가
 conv1 = BatchNormalization()(conv1)
@@ -81,13 +81,22 @@ pool5 = GlobalMaxPool1D()(conv5)
 concat = concatenate([pool1, pool2, pool3, pool4, pool5])
 
 # Dense 층 추가
-hidden1 = Dense(256, activation=tf.nn.relu)(concat)
+hidden1 = Dense(128, activation=tf.nn.relu)(concat)
 dropout_hidden1 = Dropout(rate=dropout_prob)(hidden1)
 
 hidden2 = Dense(128, activation=tf.nn.relu)(dropout_hidden1)
 dropout_hidden2 = Dropout(rate=dropout_prob)(hidden2)
 
-logits = Dense(num_classes, name='logits')(dropout_hidden2)
+hidden3 = Dense(128, activation=tf.nn.relu)(dropout_hidden2)
+dropout_hidden3 = Dropout(rate=dropout_prob)(hidden3)
+
+# 3D 텐서로 변환
+lstm_input = Reshape((-1, 1))(dropout_hidden3)
+
+# LSTM 레이어 추가
+lstm_layer = LSTM(128)(lstm_input)
+
+logits = Dense(num_classes, name='logits')(lstm_layer)
 predictions = Dense(num_classes, activation=tf.nn.softmax)(logits)
 
 # 모델 생성
@@ -98,7 +107,7 @@ model.compile(optimizer='adam',
 
 # 콜백 함수 설정
 checkpoint = ModelCheckpoint('../Capstone_ThreeIdiots/DeepLearning/intent/best_intent_model.h5', monitor='val_accuracy', save_best_only=True, mode='max', verbose=1)
-early_stopping = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
+early_stopping = EarlyStopping(monitor='val_loss', patience=20, verbose=1)
 
 # 모델 학습
 history = model.fit(train_ds, validation_data=val_ds, epochs=EPOCH, callbacks=[checkpoint, early_stopping], verbose=1)
