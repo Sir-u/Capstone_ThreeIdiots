@@ -27,7 +27,7 @@ p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/
                userdic='../Capstone_ThreeIdiots/DeepLearning/utils/user_dic.tsv')
 
 # 학습용 말뭉치 데이터를 불러옴
-corpus = read_file('../Capstone_ThreeIdiots/DeepLearning/ner/ner_train.txt')
+corpus = read_file('../Capstone_ThreeIdiots/DeepLearning/ner/ner_SET.txt')
 
 # 말뭉치 데이터에서 단어와 BIO 태그만 불러와 학습용 데이터셋 생성
 sentences, tags = [], []
@@ -35,9 +35,9 @@ for t in corpus:
     tagged_sentence = []
     sentence, bio_tag = [], []
     for w in t:
-        tagged_sentence.append((w[1], w[3]))
+        tagged_sentence.append((w[1], w[2]))
         sentence.append(w[1])
-        bio_tag.append(w[3])
+        bio_tag.append(w[2])
     
     sentences.append(sentence)
     tags.append(bio_tag)
@@ -96,7 +96,7 @@ model.add(Embedding(input_dim=vocab_size, output_dim=30, input_length=max_len, m
 model.add(Bidirectional(LSTM(200, return_sequences=True, dropout=0.50, recurrent_dropout=0.25)))
 model.add(TimeDistributed(Dense(tag_size, activation='softmax')))
 model.compile(loss='categorical_crossentropy', optimizer=Adam(0.01), metrics=['accuracy'])
-model.fit(x_train, y_train, batch_size=128, epochs=10)
+model.fit(x_train, y_train, batch_size=128, epochs=10, verbose=1)
 
 print("평가 결과 : ", model.evaluate(x_test, y_test)[1])
 model.save('ner_model.h5')
