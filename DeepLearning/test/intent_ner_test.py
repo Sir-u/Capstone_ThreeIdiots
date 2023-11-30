@@ -17,7 +17,7 @@ p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/
 # query = "오전에 탕수육 10개 주문합니다"
 # query = "화자의 질문 의도를 파악합니다."
 # query = "안녕하세요"
-query = "자장면 3개 주문 가능할까요?"
+query = "아 배고프다,, 자장면 먹고싶은데 어떠세요?"
 
 # 의도 파악
 import sys

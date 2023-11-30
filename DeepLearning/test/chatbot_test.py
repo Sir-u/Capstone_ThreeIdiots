@@ -22,7 +22,7 @@ db.connect()    # 디비 연결
 # query = "오전에 탕수육 10개 주문합니다"
 # query = "화자의 질문 의도를 파악합니다."
 # query = "안녕하세요"
-query = "오랜만이에요, 요즘은 뭐하고 지내시나요?"
+query = "아 배고프다,, 자장면 먹고싶은데 어떠세요?"
 
 # 의도 파악
 from intent.IntentModel import IntentModel
