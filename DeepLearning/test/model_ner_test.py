@@ -1,9 +1,9 @@
 import sys
 sys.path.append('../Capstone_ThreeIdiots/DeepLearning/utils/')
 from Preprocess import Preprocess
-import sys
-sys.path.append('../Capstone_ThreeIdiots/DeepLearning/ner/')
-from NerModel import NerModel
+
+sys.path.append('../Capstone_ThreeIdiots/DeepLearning/')
+from ner.NerModel import NerModel
 
 p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/dict/chatbot_dict.bin',
                userdic = '../Capstone_ThreeIdiots/DeepLearning/utils/user_dic.tsv')

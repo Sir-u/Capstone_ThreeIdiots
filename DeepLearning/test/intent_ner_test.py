@@ -1,6 +1,8 @@
-# from config.DatabaseConfig import *
-# from utils.Database import Database
 import sys
+sys.path.append('../Capstone_ThreeIdiots/DeepLearning/')
+from config.DatabaseConfig import *
+from Database import Database
+
 sys.path.append('../Capstone_ThreeIdiots/DeepLearning/utils/')
 from Preprocess import Preprocess
 
@@ -8,16 +10,16 @@ from Preprocess import Preprocess
 p = Preprocess(word2index_dic='../Capstone_ThreeIdiots/DeepLearning/train_tools/dict/chatbot_dict.bin', userdic='../Capstone_ThreeIdiots/DeepLearning/utils/user_dic.tsv')
 
 # 질문/답변 학습 디비 연결 객체 생성
-# db = Database(
-#     host=DB_HOST, user=DB_USER, password=DB_PASSWORD, db_name=DB_NAME
-# )
-# db.connect()    # 디비 연결
+db = Database(
+    host=DB_HOST, user=DB_USER, password=DB_PASSWORD, db_name=DB_NAME
+)
+db.connect()    # 디비 연결
 
 # 원문
-# query = "오전에 탕수육 10개 주문합니다"
+query = "하, 엄마가 나한테 실망했대. 나는 아무것도 안했는데..."
 # query = "화자의 질문 의도를 파악합니다."
 # query = "안녕하세요"
-query = "아 배고프다,, 자장면 먹고싶은데 어떠세요?"
+# query = "아 배고프다,, 자장면 먹고싶은데 어떠세요?"
 
 # 의도 파악
 import sys
@@ -45,15 +47,15 @@ print("답변 검색에 필요한 NER 태그 : ", ner_tags)
 print("=" * 100)
 
 # 답변 검색
-# from utils.FindAnswer import FindAnswer
+from FindAnswer import FindAnswer
 
-# try:
-#     f = FindAnswer(db)
-#     answer_text, answer_image = f.search(intent_name, ner_tags)
-#     answer = f.tag_to_word(predicts, answer_text)
-# except:
-#     answer = "죄송해요 무슨 말인지 모르겠어요"
+try:
+    f = FindAnswer(db)
+    answer_text, answer_image = f.search(intent_name, ner_tags)
+    answer = f.tag_to_word(predicts, answer_text)
+except:
+    answer = "죄송해요 무슨 말인지 모르겠어요"
 
-# print("답변 : ", answer)
+print("답변 : ", answer)
 
-# db.close() # 디비 연결 끊음s
+db.close() # 디비 연결 끊음
