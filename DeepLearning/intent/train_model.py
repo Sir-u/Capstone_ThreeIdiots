@@ -5,7 +5,7 @@ from keras.models import Model
 from keras.layers import Input, Embedding, Dense, Dropout, Conv1D, GlobalMaxPool1D, concatenate
 
 # 데이터 읽어오기
-train_file = "../Capstone_ThreeIdiots/DeepLearning/intent/ADD_train_data.csv"
+train_file = "../Capstone_ThreeIdiots/DeepLearning/intent/train_data_reduce.csv"
 data = pd.read_csv(train_file, delimiter=',')
 queries = data['query'].tolist()
 intents = data['intent'].tolist()
