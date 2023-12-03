@@ -131,15 +131,13 @@ class RecommendationApp(QWidget):
         
 
     def updateOptionPage(self):
-        print('1')
-
         for i in range(len(self.option)):
-            self.option[i] = 'DummyText'
+            self.option[i] = "DummyText"
             self.option_buttons[i].setText(self.option[i])
-
         self.showOptionPage()
 
-app = QApplication(sys.argv)
-ex = RecommendationApp()
-ex.show()
-sys.exit(app.exec_())
+def runGUI():
+    app = QApplication(sys.argv)
+    ex = RecommendationApp()
+    ex.show()
+    sys.exit(app.exec_())
