@@ -1,7 +1,9 @@
 import sys
 from PyQt5.QtWidgets import *
 import random
-import testfile
+#import testfile
+
+messageDict = []
 
 class RecommendationApp(QWidget):
     option = ["옵션 1", "옵션 2", "옵션 3"]
@@ -129,14 +131,15 @@ class RecommendationApp(QWidget):
         
 
     def updateOptionPage(self):
-        testfile.CreateRecommendSentence()
+        print('1')
+
         for i in range(len(self.option)):
-            self.option[i] = testfile.answer[i]
+            self.option[i] = 'DummyText'
             self.option_buttons[i].setText(self.option[i])
+
         self.showOptionPage()
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = RecommendationApp()
-    ex.show()
-    sys.exit(app.exec_())
+app = QApplication(sys.argv)
+ex = RecommendationApp()
+ex.show()
+sys.exit(app.exec_())
