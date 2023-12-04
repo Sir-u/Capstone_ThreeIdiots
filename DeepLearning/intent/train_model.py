@@ -2,11 +2,11 @@ import pandas as pd
 import tensorflow as tf
 from keras import preprocessing
 from keras.models import Model
-from keras.layers import Input, Embedding, Dense, Dropout, Conv1D, GlobalMaxPool1D, Reshape, concatenate, BatchNormalization, LSTM
+from keras.layers import Input, Embedding, Dense, Dropout, Conv1D, GlobalMaxPool1D, concatenate, BatchNormalization
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 
 # 데이터 읽어오기
-train_file = "../Capstone_ThreeIdiots/DeepLearning/intent/ADD_train_data.csv"
+train_file = "../Capstone_ThreeIdiots/DeepLearning/intent/ADD_train_data3.csv"
 data = pd.read_csv(train_file, delimiter=',')
 queries = data['query'].tolist()
 intents = data['intent'].tolist()
@@ -35,82 +35,56 @@ ds = tf.data.Dataset.from_tensor_slices((padded_seqs, intents))
 ds = ds.shuffle(len(queries))
 
 train_size = int(len(padded_seqs) * 0.7)
-val_size = int(len(padded_seqs) * 0.2)
-test_size = int(len(padded_seqs) * 0.1)
+val_size = int(len(padded_seqs) * 0.1)
+test_size = int(len(padded_seqs) * 0.2)
 
 train_ds = ds.take(train_size).batch(20)
 val_ds = ds.skip(train_size).take(val_size).batch(20)
 test_ds = ds.skip(train_size + val_size).take(test_size).batch(20)
 
 # 하이퍼 파라미터 설정
-dropout_prob = 0.5
+dropout_prob = 0.3
 EMB_SIZE = 128
-EPOCH = 100
+EPOCH = 20
+num_filters = 512
 VOCAB_SIZE = len(p.word_index) + 1
 
 # 클래스 수 추출
 num_classes = len(set(intents))
+print(num_classes)
 
 # CNN 모델
 input_layer = Input(shape=(MAX_SEQ_LEN,))
 embedding_layer = Embedding(VOCAB_SIZE, EMB_SIZE, input_length=MAX_SEQ_LEN)(input_layer)
 dropout_emb = Dropout(rate=dropout_prob)(embedding_layer)
 
-# 여러 컨볼루션 레이어와 필터 크기 사용
-conv1 = Conv1D(filters=32, kernel_size=3, padding='valid', activation=tf.nn.relu)(dropout_emb)
-conv2 = Conv1D(filters=64, kernel_size=4, padding='valid', activation=tf.nn.relu)(dropout_emb)
-conv3 = Conv1D(filters=128, kernel_size=5, padding='valid', activation=tf.nn.relu)(dropout_emb)
-conv4 = Conv1D(filters=256, kernel_size=6, padding='valid', activation=tf.nn.relu)(dropout_emb)
-conv5 = Conv1D(filters=512, kernel_size=7, padding='valid', activation=tf.nn.relu)(dropout_emb)
 
-# 각 컨볼루션 레이어 뒤에 배치 정규화 레이어 추가
-conv1 = BatchNormalization()(conv1)
-conv2 = BatchNormalization()(conv2)
-conv3 = BatchNormalization()(conv3)
-conv4 = BatchNormalization()(conv4)
-conv5 = BatchNormalization()(conv5)
-
-# 각 컨볼루션 레이어의 결과를 풀링 레이어로 가져옴
-pool1 = GlobalMaxPool1D()(conv1)
-pool2 = GlobalMaxPool1D()(conv2)
-pool3 = GlobalMaxPool1D()(conv3)
-pool4 = GlobalMaxPool1D()(conv4)
-pool5 = GlobalMaxPool1D()(conv5)
+pool_layers = []
+filter_sizes = [2, 3, 4]
+for filter_size in filter_sizes:
+   conv = Conv1D(num_filters, kernel_size=filter_size, padding='valid', activation=tf.nn.relu)(embedding_layer)
+   conv = BatchNormalization()(conv)
+   pool = GlobalMaxPool1D()(conv)
+   pool_layers.append(pool)
 
 # 모든 풀링 레이어를 concatenate
-concat = concatenate([pool1, pool2, pool3, pool4, pool5])
-
-# Dense 층 추가
-hidden1 = Dense(128, activation=tf.nn.relu)(concat)
-dropout_hidden1 = Dropout(rate=dropout_prob)(hidden1)
-
-hidden2 = Dense(128, activation=tf.nn.relu)(dropout_hidden1)
-dropout_hidden2 = Dropout(rate=dropout_prob)(hidden2)
-
-hidden3 = Dense(128, activation=tf.nn.relu)(dropout_hidden2)
-dropout_hidden3 = Dropout(rate=dropout_prob)(hidden3)
-
-# 3D 텐서로 변환
-lstm_input = Reshape((-1, 1))(dropout_hidden3)
-
-# LSTM 레이어 추가
-lstm_layer = LSTM(128)(lstm_input)
-
-logits = Dense(num_classes, name='logits')(lstm_layer)
-predictions = Dense(num_classes, activation=tf.nn.softmax)(logits)
+concat = concatenate(pool_layers)
+output = Dropout(rate=dropout_prob)(concat)
+predictions = Dense(num_classes, activation=tf.nn.softmax)(output)
 
 # 모델 생성
 model = Model(inputs=input_layer, outputs=predictions)
 model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
+model.summary()
 
 # 콜백 함수 설정
 checkpoint = ModelCheckpoint('../Capstone_ThreeIdiots/DeepLearning/intent/best_intent_model.h5', monitor='val_accuracy', save_best_only=True, mode='max', verbose=1)
-early_stopping = EarlyStopping(monitor='val_loss', patience=20, verbose=1)
+early_stopping = EarlyStopping(monitor='val_loss', patience=10, verbose=1)
 
 # 모델 학습
-history = model.fit(train_ds, validation_data=val_ds, epochs=EPOCH, callbacks=[checkpoint, early_stopping], verbose=1)
+history = model.fit(train_ds, batch_size=64, validation_data=val_ds, epochs=EPOCH, callbacks=[checkpoint, early_stopping], verbose=1)
 
 # 최상의 성능을 보인 모델 불러오기
 model.load_weights('../Capstone_ThreeIdiots/DeepLearning/intent/best_intent_model.h5')
