@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 import random
-#import testfile
+import chatbot_test
 
 messageDict = []
 
@@ -131,8 +131,9 @@ class RecommendationApp(QWidget):
         
 
     def updateOptionPage(self):
+        answer = chatbot_test.GenerateAnswer(messageDict[-1])
         for i in range(len(self.option)):
-            self.option[i] = "DummyText"
+            self.option[i] = answer
             self.option_buttons[i].setText(self.option[i])
         self.showOptionPage()
 
