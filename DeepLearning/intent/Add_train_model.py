@@ -6,7 +6,7 @@ from keras.models import Model
 from keras.layers import Input, Embedding, Dense, Dropout, Conv1D, GlobalMaxPool1D, concatenate
 
 # 데이터 읽어오기
-train_file = "../Capstone_ThreeIdiots/DeepLearning/intent/ADD_train_data2.csv"
+train_file = "../Capstone_ThreeIdiots/DeepLearning/intent/train_data_reduce.csv"
 data = pd.read_csv(train_file, delimiter=',')
 queries = data['query'].tolist()
 intents = data['intent'].tolist()
@@ -64,11 +64,10 @@ pool3 = GlobalMaxPool1D()(conv3)
 # 3,4,5gram 이후 합치기
 concat = concatenate([pool1, pool2, pool3])
 
-num_classes = len(set(intents))  # 클래스 수를 intents에서 추출
 hidden = Dense(128, activation=tf.nn.relu)(concat)
 dropout_hidden = Dropout(rate=dropout_prob)(hidden)
-logits = Dense(num_classes, name='logits')(dropout_hidden)
-predictions = Dense(num_classes, activation=tf.nn.softmax)(logits)
+logits = Dense(15, name='logits')(dropout_hidden)
+predictions = Dense(15, activation=tf.nn.softmax)(logits)
 
 # 모델 생성
 model = Model(inputs=input_layer, outputs=predictions)
