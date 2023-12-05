@@ -131,9 +131,8 @@ class RecommendationApp(QWidget):
         
 
     def updateOptionPage(self):
-        answer = chatbot_test.GenerateAnswer(messageDict[-1])
         for i in range(len(self.option)):
-            self.option[i] = answer
+            self.option[i] = chatbot_test.GenerateAnswer(messageDict[-1])
             self.option_buttons[i].setText(self.option[i])
         self.showOptionPage()
 
