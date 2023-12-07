@@ -5,7 +5,7 @@ from config.DatabaseConfig import *
 
 db = None
 try:
-
+    
     db = pymysql.connect(
         host='127.0.0.1',
         user='turtle', 
@@ -28,9 +28,20 @@ try:
 
     '''
     
+    sql_create_message_table = '''
+        CREATE TABLE IF NOT EXISTS `message_from_server` (
+            `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `message` TEXT NULL,
+            `date` VARCHAR(45) NULL,
+            PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+    '''
+    
     #테이블 생성
     with db.cursor() as cursor:
         cursor.execute(sql)
+        cursor.execute(sql_create_message_table)
     db.commit()
         
 except Exception as e:

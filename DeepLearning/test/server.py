@@ -1,6 +1,12 @@
 import socket
 import threading
 
+import sys
+sys.path.append("../Capstone_ThreeIdiots/DeepLearning/")
+from config.DatabaseConfig import *
+from Database import Database
+from datetime import datetime
+
 # 서버 설정
 HOST = '127.0.0.1'  # 서버 IP 주소
 PORT = 12345         # 포트 번호
@@ -18,6 +24,12 @@ server_socket.listen()
 clients = []
 client_count = 0  # 연결된 클라이언트 수를 저장할 변수
 
+db = Database(
+        host=DB_HOST, user=DB_USER, password=DB_PASSWORD, db_name=DB_NAME, charset='utf8'
+    )
+
+date = datetime.today().strftime("%Y/%m/%d %H:%M")
+
 # 클라이언트와 통신하는 함수
 def handle_client(client_socket, addr, client_number):
     print(f'클라이언트 {client_number}로부터의 연결: {addr}')
@@ -34,12 +46,26 @@ def handle_client(client_socket, addr, client_number):
             client_socket.close()
             #-------------------------------------------------------------------------------------------------
             # DB 닫기
+            db.close() # 디비 연결 끊음
             #-------------------------------------------------------------------------------------------------
 
             break
         print(f'클라이언트 {client_number} >> {message}')
         #-------------------------------------------------------------------------------------------------
-        # DB 데이터 삽입 
+        # DB 데이터 삽입             
+        sql = '''
+            INSERT message_from_server(message, date) 
+            values(
+            '%s', '%s'
+            )
+        ''' % (message.value, date.value)
+
+        # 엑셀에서 불러온 cell에 데이터가 없는 경우, null 로 치환
+        sql = sql.replace("'None'", "null")
+
+        with db.cursor() as cursor:
+            cursor.execute(sql)
+            db.commit()     
         #-------------------------------------------------------------------------------------------------
 
         # 연결된 모든 클라이언트에게 메시지 전송
@@ -63,4 +89,5 @@ accept_thread = threading.Thread(target=accept_clients)
 accept_thread.start()
 #-------------------------------------------------------------------------------------------------
 # DB 열기
+db.connect()    # 디비 연결
 #-------------------------------------------------------------------------------------------------

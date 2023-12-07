@@ -40,6 +40,7 @@ def insert_data(db, xls_row):
         cursor.execute(sql)
         print('{} 저장'.format(query.value))
         db.commit()
+        
 
 train_file = "../Capstone_ThreeIdiots/DeepLearning/train_tools/qna/train_data.xlsx"
 db = None
