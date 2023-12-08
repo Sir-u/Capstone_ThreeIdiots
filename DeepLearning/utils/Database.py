@@ -68,7 +68,19 @@ class Database:
 
         finally:
             return result
+        
+    # db에 데이터 저장
+    def insert_message(self, message, date):
+        sql = '''
+            INSERT INTO message_from_server(message, date) 
+            VALUES (%s, %s)
+        '''
+        sql = sql.replace("'None'", "null")
 
+        with self.conn.cursor() as cursor:
+            cursor.execute(sql, (message, date))
+        self.conn.commit()
+    
     # SELECT 구문 실행 후, 전체 데이터 ROW만 불러옴
     def select_all(self, sql):
         result = None
