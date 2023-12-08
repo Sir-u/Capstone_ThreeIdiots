@@ -33,6 +33,6 @@ while True:
     print(ret_data)
     print(type(ret_data))
     print("\n")
-
+    
     # 챗봇 엔진 서버 연결 소켓 닫기
     mySocket.close()

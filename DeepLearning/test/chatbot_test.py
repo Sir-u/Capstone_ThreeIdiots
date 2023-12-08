@@ -20,7 +20,7 @@ def GenerateAnswer(query):
     db.connect()    # 디비 연결
 
     # 원문
-    #query = "오늘 왜이렇게 기분이 나쁘지?"
+    # query = "오늘 왜이렇게 기분이 나쁘지?"
     # query = "화자의 질문 의도를 파악합니다."
     # query = "안녕하세요"
     # query = "아 배고프다,, 자장면 먹고싶은데 어떠세요?"
