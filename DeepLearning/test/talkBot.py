@@ -29,8 +29,8 @@ class RecommendationApp(QWidget):
         self.recommend_button = QPushButton("추천해줘")
         self.recommend_button.setStyleSheet(
             """
-            background-color: #3498db;
-            color: white;
+            background-color: #77ddff;
+            color: #800080;
             padding: 10px;
             border: none;
             border-radius: 5px;
@@ -48,8 +48,8 @@ class RecommendationApp(QWidget):
         for button in self.option_buttons:
             button.setStyleSheet(
                 """
-                background-color: #3498db;
-                color: white;
+                background-color: #77ddff;
+                color: #800080;
                 padding: 10px;
                 border: none;
                 border-radius: 5px;
@@ -59,8 +59,8 @@ class RecommendationApp(QWidget):
         self.recommend_again_button = QPushButton("재추천")
         self.recommend_again_button.setStyleSheet(
             """
-            background-color: #2ecc71;
-            color: white;
+            background-color: #98ff98;
+            color: #556b2f;
             padding: 10px;
             border: none;
             border-radius: 5px;
@@ -80,8 +80,8 @@ class RecommendationApp(QWidget):
         self.back_button = QPushButton("돌아가기")
         self.back_button.setStyleSheet(
             """
-            background-color: #e74c3c;
-            color: white;
+            background-color: #FFB6C1;
+            color: #FF007F;
             padding: 10px;
             border: none;
             border-radius: 5px;
@@ -93,10 +93,44 @@ class RecommendationApp(QWidget):
         result_layout.addWidget(self.back_button)
         self.result_page.setLayout(result_layout)
 
+        # 도움말 페이지
+        self.help_page = QWidget()
+        self.help_label = QLabel("자유롭게 대화를 하다가 무슨 말을 해야할 지 고민될 때\n\n추천해줘 버튼을 눌러 추천 문장을 선택하세요.\n\n대화 내역을 통해 적절한 문장을 분석해서 추천해드립니다.")
+        self.help_back_button = QPushButton("뒤로 가기")
+        self.help_back_button.setStyleSheet(
+            """
+            background-color: #FFB6C1;
+            color: #FF007F;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            """
+        )
+
+        self.help_button = QPushButton("도움말")
+        self.help_button.setStyleSheet(
+            """
+            background-color: #98ff98;
+            color: #556b2f;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            """
+        )
+        self.help_button.clicked.connect(self.showHelpPage)  # 도움말 버튼을 눌렀을 때 도움말 페이지로 이동
+        recommend_layout.addWidget(self.help_button)  # 추천 페이지 레이아웃에 도움말 버튼 추가
+
+        self.help_back_button.clicked.connect(self.showRecommendations)
+        help_layout = QVBoxLayout()
+        help_layout.addWidget(self.help_label)
+        help_layout.addWidget(self.help_back_button)
+        self.help_page.setLayout(help_layout)
+
         # 페이지를 stacked widget에 추가
         self.stacked_widget.addWidget(self.recommend_page)
         self.stacked_widget.addWidget(self.option_page)
         self.stacked_widget.addWidget(self.result_page)
+        self.stacked_widget.addWidget(self.help_page)
 
         layout = QVBoxLayout()
         layout.addWidget(self.stacked_widget)
@@ -135,6 +169,11 @@ class RecommendationApp(QWidget):
             self.option[i] = chatbot_test.GenerateAnswer(messageDict[-1])
             self.option_buttons[i].setText(self.option[i])
         self.showOptionPage()
+
+    def showHelpPage(self):
+        # 도움말 페이지로 전환
+        self.stacked_widget.setCurrentIndex(3)
+        self.prevPageIndex = self.stacked_widget.currentIndex()  # 이전 페이지 인덱스 업데이트
 
 def runGUI():
     app = QApplication(sys.argv)
