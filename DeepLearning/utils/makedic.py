@@ -23,6 +23,6 @@ with open(output_file_path, "w", encoding="utf-8") as tsv_file:
 
             # Write each "form" and "label" pair to the TSV file, excluding "ss" and "sn" labels and forms with less than 2 characters
             for i in range(len(form)):
-                if labels[i] in ["NNG"] and len(form[i]) >= 2 and form[i] not in unique_forms:
+                if labels[i] not in ["SS", ""] and len(form[i]) >= 2 and form[i] not in unique_forms:
                     tsv_file.write(form[i] + "\t" + labels[i] + "\n")
                     unique_forms.add(form[i])

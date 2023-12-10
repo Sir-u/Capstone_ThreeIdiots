@@ -8,9 +8,6 @@ output_file_path = "./Downloads/NIKL_MP(v1.1)/ner_SET.txt"
 with open(input_file_path, "r", encoding="utf-8") as file:
     data = json.load(file)
 
-# Set to keep track of unique form values
-unique_forms = set()
-
 # Open the TSV file for writing
 with open(output_file_path, "w", encoding="utf-8") as tsv_file:
     # Iterate through all documents
@@ -25,8 +22,7 @@ with open(output_file_path, "w", encoding="utf-8") as tsv_file:
             # and forms with less than 2 characters
             for morpheme in sentence["morpheme"]:
                 form, label = morpheme["form"], morpheme["label"]
-                if label not in ["SS", "SN"] and len(form) >= 2 and form not in unique_forms:
+                if label not in ["SS", "SN"] and len(form) >= 2:
                     tsv_file.write(str(count) + "\t" + form + "\t" + label + "\n")
-                    unique_forms.add(form)
                     count += 1
             tsv_file.write("\n")
