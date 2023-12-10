@@ -1,5 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtCore import QSize, Qt
 import random
 import chatbot_test
 
@@ -25,8 +27,12 @@ class RecommendationApp(QWidget):
         self.stacked_widget = QStackedWidget()
 
         # 추천 페이지
+        image_file_path = '../Capstone_ThreeIdiots/Asset/TalkHelper_Logo.png'  # 이미지 파일 경로 및 이름 설정
         self.recommend_page = QWidget()
+        # 추천 버튼 생성
         self.recommend_button = QPushButton("추천해줘")
+
+        # 버튼 스타일 설정
         self.recommend_button.setStyleSheet(
             """
             background-color: #77ddff;
@@ -36,16 +42,32 @@ class RecommendationApp(QWidget):
             border-radius: 5px;
             """
         )
+
+        # 이미지 레이블 생성 및 이미지 설정
+        image_label = QLabel()
+        pixmap = QPixmap(image_file_path)
+        scaled_pixmap = pixmap.scaled(300, 300)  # 이미지 크기 조절
+        image_label.setPixmap(scaled_pixmap)
+
+        # 수직 레이아웃 생성
+        vbox_layout = QVBoxLayout()
+        vbox_layout.addWidget(image_label, alignment=Qt.AlignCenter)  # 이미지 레이블 추가 (상단 정렬)
+        vbox_layout.addWidget(self.recommend_button)  # 버튼 추가
         self.recommend_button.clicked.connect(self.updateOptionPage)  # 버튼 클릭 시 옵션 선택 페이지로 이동
+        # 추천 페이지 레이아웃 설정
         recommend_layout = QVBoxLayout()
-        recommend_layout.addWidget(self.recommend_button)
+        recommend_layout.addLayout(vbox_layout)  # 수직 레이아웃을 추천 페이지 레이아웃에 추가
         self.recommend_page.setLayout(recommend_layout)
 
-        # 옵션 선택 페이지
+       # 옵션 선택 페이지
         self.option_page = QWidget()
         self.option_label = QLabel("텍스트를 선택하세요:")
         self.option_buttons = [QPushButton(self.option[0]), QPushButton(self.option[1]), QPushButton(self.option[2])]
-        for button in self.option_buttons:
+
+        option_layout = QVBoxLayout()  # option_layout 먼저 정의
+        image_file_path = '../Capstone_ThreeIdiots/Asset/TalkHelper_Icon.png'  # 이미지 파일 경로 및 이름 설정
+
+        for i, button in enumerate(self.option_buttons):
             button.setStyleSheet(
                 """
                 background-color: #77ddff;
@@ -55,7 +77,22 @@ class RecommendationApp(QWidget):
                 border-radius: 5px;
                 """
             )
-            button.clicked.connect(self.showResultPage)  # 옵션 버튼 클릭 시 결과 페이지로 이동
+            
+            # 이미지 레이블 생성 및 이미지 설정
+            image_label = QLabel()
+            pixmap = QPixmap(image_file_path)
+            scaled_pixmap = pixmap.scaled(50, 50)  # 이미지 크기 조절
+            image_label.setPixmap(scaled_pixmap)
+            
+            # 이미지 레이블과 버튼을 포함하는 수평 레이아웃 생성
+            hbox_layout = QHBoxLayout()
+            hbox_layout.addWidget(image_label)  # 이미지 레이블 추가
+            hbox_layout.addWidget(button)  # 버튼 추가
+            hbox_layout.addStretch()  # 이미지와 버튼을 왼쪽과 오른쪽으로 분리하기 위한 Stretch 추가
+
+            option_layout.addLayout(hbox_layout)  # 수평 레이아웃을 수직 레이아웃에 추가
+            button.clicked.connect(self.showResultPage)
+
         self.recommend_again_button = QPushButton("재추천")
         self.recommend_again_button.setStyleSheet(
             """
@@ -66,13 +103,12 @@ class RecommendationApp(QWidget):
             border-radius: 5px;
             """
         )
+
         self.recommend_again_button.clicked.connect(self.updateOptionPage)  # 재추천 버튼 클릭 시 재추천 기능 실행
-        option_layout = QVBoxLayout()
-        option_layout.addWidget(self.option_label)
-        for button in self.option_buttons:
-            option_layout.addWidget(button)
         option_layout.addWidget(self.recommend_again_button)
-        self.option_page.setLayout(option_layout)
+
+        self.option_page.setLayout(option_layout)  # option_layout을 옵션 선택 페이지 레이아웃으로 설정
+
 
         # 결과 페이지
         self.result_page = QWidget()
@@ -136,7 +172,7 @@ class RecommendationApp(QWidget):
         layout.addWidget(self.stacked_widget)
         self.setLayout(layout)
 
-        self.setWindowTitle("추천 앱")
+        self.setWindowTitle("Tellper")
         self.setGeometry(100, 100, 400, 200)
 
         # 이전 페이지 인덱스를 추적하는 변수
@@ -161,13 +197,9 @@ class RecommendationApp(QWidget):
         # 추천 페이지로 전환
         self.stacked_widget.setCurrentIndex(0)
 
-    #def recommendAgain(self):
-        
-
     def updateOptionPage(self):
         for i in range(len(self.option)):
             self.option[i] = chatbot_test.GenerateAnswer(messageDict[-1])
-            self.option_buttons[i].setText(self.option[i])
         self.showOptionPage()
 
     def showHelpPage(self):
