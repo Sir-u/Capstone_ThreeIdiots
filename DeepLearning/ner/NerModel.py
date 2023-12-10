@@ -35,7 +35,7 @@ class NerModel:
         predict = self.model.predict(np.array([padded_seqs[0]]))
         predict_class = tf.math.argmax(predict, axis = -1)
         
-        tags = [self.index_to_ner[i] for i in predict_class.numpy()[0]]
+        tags = [self.index_to_ner[i] for i in predict_class.numpy()[0] if i in self.index_to_ner]
         return list(zip(keywords, tags))
     
     def predict_tags(self, query):
