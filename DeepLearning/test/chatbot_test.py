@@ -27,7 +27,7 @@ def GenerateAnswer(query):
 
     # 의도 파악
     from intent.IntentModel import IntentModel
-    intent = IntentModel(model_name='../Capstone_ThreeIdiots/DeepLearning/intent/intent_model_15.h5', proprocess=p)
+    intent = IntentModel(model_name='../Capstone_ThreeIdiots/DeepLearning/intent/best_intent_model.h5', proprocess=p)
     predict = intent.predict_class(query)
     intent_name = intent.labels[predict]
 

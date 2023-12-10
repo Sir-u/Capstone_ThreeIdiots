@@ -72,16 +72,18 @@ x_train = preprocessing.sequence.pad_sequences(x_train, padding='post', maxlen=m
 y_train = preprocessing.sequence.pad_sequences(y_train, padding='post', maxlen=max_len)
 
 # 학습 데이터와 테스트 데이터를 8:2의 비율로 분리
-x_train, x_test, y_train, y_test = train_test_split(x_train, y_train,
-                                                    test_size=.2,
-                                                    random_state=1234)
+x_train, x_temp, y_train, y_temp = train_test_split(x_train, y_train, test_size=.3, random_state=1234)
+x_valid, x_test, y_valid, y_test = train_test_split(x_temp, y_temp, test_size=.67, random_state=1234)
 
 # 출력 데이터를 one-hot encoding
 y_train = tf.keras.utils.to_categorical(y_train, num_classes=tag_size)
+y_valid = tf.keras.utils.to_categorical(y_valid, num_classes=tag_size)
 y_test = tf.keras.utils.to_categorical(y_test, num_classes=tag_size)
 
 print("학습 샘플 시퀀스 형상 : ", x_train.shape)
 print("학습 샘플 레이블 형상 : ", y_train.shape)
+print("검증 샘플 시퀀스 형상 : ", x_valid.shape)
+print("검증 샘플 레이블 형상 : ", y_valid.shape)
 print("테스트 샘플 시퀀스 형상 : ", x_test.shape)
 print("테스트 샘플 레이블 형상 : ", y_test.shape)
 
@@ -89,20 +91,20 @@ print("테스트 샘플 레이블 형상 : ", y_test.shape)
 # 모델 정의 (Bi-LSTM)
 from keras.models import Sequential
 from keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional
-from keras.optimizers import Adam
+from keras.optimizers.legacy import Adam
 
 model = Sequential()
 model.add(Embedding(input_dim=vocab_size, output_dim=30, input_length=max_len, mask_zero=True))
 model.add(Dropout(0.3))
-model.add()
 model.add(Bidirectional(LSTM(200, return_sequences=True, dropout=0.50, recurrent_dropout=0.25)))
 model.add(TimeDistributed(Dense(tag_size, activation='softmax')))
 
+model.summary()
 model.compile(loss='categorical_crossentropy', optimizer=Adam(0.01), metrics=['accuracy'])
-model.fit(x_train, y_train, batch_size=128, epochs=10, verbose=1)
+model.fit(x_train, y_train, batch_size=128, epochs=10, verbose=1, validation_data=(x_valid, y_valid))
 
 print("평가 결과 : ", model.evaluate(x_test, y_test)[1])
-model.save('ner_model.h5')
+model.save('../Capstone_ThreeIdiots/DeepLearning/ner/ner_model.h5')
 
 
 # 시퀀스를 NER 태그로 변환
