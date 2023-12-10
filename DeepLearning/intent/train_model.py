@@ -49,9 +49,9 @@ EPOCH = 20
 num_filters = 512
 VOCAB_SIZE = len(p.word_index) + 1
 
-# 클래스 수 추출
-num_classes = len(set(intents))
-print(num_classes)
+# # 클래스 수 추출
+# num_classes = len(set(intents))
+# print(num_classes)
 
 # CNN 모델
 input_layer = Input(shape=(MAX_SEQ_LEN,))
@@ -70,7 +70,7 @@ for filter_size in filter_sizes:
 # 모든 풀링 레이어를 concatenate
 concat = concatenate(pool_layers)
 output = Dropout(rate=dropout_prob)(concat)
-predictions = Dense(num_classes, activation=tf.nn.softmax)(output)
+predictions = Dense(15, activation=tf.nn.softmax)(output)
 
 # 모델 생성
 model = Model(inputs=input_layer, outputs=predictions)
