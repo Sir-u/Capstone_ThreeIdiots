@@ -80,6 +80,7 @@ class Database:
         with self.conn.cursor() as cursor:
             cursor.execute(sql, (message, date))
         self.conn.commit()
+        
     
     # SELECT 구문 실행 후, 전체 데이터 ROW만 불러옴
     def select_all(self, sql):
