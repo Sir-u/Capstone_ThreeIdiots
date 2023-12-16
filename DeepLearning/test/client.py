@@ -1,5 +1,8 @@
 import socket
 import threading
+
+import sys
+sys.path.append("../Capstone_ThreeIdiots/DeepLearning/test/")
 import talkBot
 
 SERVER_IP = '127.0.0.1'
