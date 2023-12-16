@@ -1,14 +1,16 @@
-import socket
-import threading
-
 import sys
 sys.path.append("../Capstone_ThreeIdiots/DeepLearning/")
 from config.DatabaseConfig import *
+
+import socket
+import threading
+
 from Database import Database
 from datetime import datetime
 
+
 # 서버 설정
-HOST = '127.0.0.1'  # 서버 IP 주소
+HOST = '127.0.0.1'  # 서버 IP 주소s
 PORT = 12345         # 포트 번호
 
 # 소켓 생성
